@@ -1,0 +1,6 @@
+{
+  "name": "YouTube Video Summarizer & Archive",
+  "description": "Analyze and embed YouTube videos with AI-generated executive summaries, bullet highlights, and a persistent video archive.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

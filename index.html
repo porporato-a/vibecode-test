@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Video Summarizer & Archive</title>
+    <meta name="description" content="Analyze and embed YouTube videos with AI-generated executive summaries, bullet highlights, and a persistent video archive." />
+    <meta property="og:title" content="YouTube Video Summarizer & Archive" />
+    <meta property="og:description" content="Analyze and embed YouTube videos with AI-generated executive summaries, bullet highlights, and a persistent video archive." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+      // Shim WebSocket for Vite HMR in preview iframe to prevent "WebSocket closed without opened" error
+      if (typeof window !== 'undefined' && window.WebSocket) {
+        const NativeWebSocket = window.WebSocket;
+        window.WebSocket = class extends NativeWebSocket {
+          constructor(url, protocols) {
+            const urlStr = String(url || '');
+            // Intercept Vite HMR and localhost dev websockets that fail in iframe preview
+            if (
+              urlStr.includes('24678') ||
+              urlStr.includes('/@vite/') ||
+              urlStr.includes('ais-dev') ||
+              urlStr.includes('vite') ||
+              urlStr.startsWith('ws://localhost') ||
+              urlStr.startsWith('wss://localhost')
+            ) {
+              const mock = new EventTarget();
+              mock.readyState = 1; // WebSocket.OPEN
+              mock.OPEN = 1;
+              mock.CONNECTING = 0;
+              mock.CLOSING = 2;
+              mock.CLOSED = 3;
+              mock.url = urlStr;
+              mock.send = function() {};
+              mock.close = function() {
+                mock.readyState = 3;
+                mock.dispatchEvent(new Event('close'));
+              };
+              setTimeout(() => {
+                mock.dispatchEvent(new Event('open'));
+              }, 0);
+              return mock;
+            }
+            return new NativeWebSocket(url, protocols);
+          }
+        };
+      }
+
+      // Secondary shield: prevent unhandled WebSocket rejections from bubbling
+      window.addEventListener('unhandledrejection', function(event) {
+        if (event && event.reason) {
+          const msg = String(event.reason.message || event.reason);
+          const stack = String(event.reason.stack || '');
+          if (msg.includes('WebSocket') || stack.includes('@vite/client') || stack.includes('createWebSocketModuleRunnerTransport')) {
+            event.preventDefault();
+          }
+        }
+      });
+    </script>
+  </head>
+  <body class="bg-[#090D16] text-slate-100 antialiased min-h-screen selection:bg-rose-500/20 selection:text-rose-200">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
