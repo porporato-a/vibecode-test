@@ -16,6 +16,20 @@ export default function App() {
   const [isArchiveLoading, setIsArchiveLoading] = useState<boolean>(true);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [mobileArchiveOpen, setMobileArchiveOpen] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDark]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const navbarFileInputRef = useRef<HTMLInputElement>(null);
@@ -203,7 +217,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090D16] text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Hidden file input for Navbar import */}
       <input
         type="file"
@@ -219,10 +233,12 @@ export default function App() {
         className="hidden"
       />
 
-      {/* Top Bar adhering to Top Bar Contract */}
+      {/* Top Bar adhering to Top Bar Contract with Lite/Dark theme toggle */}
       <Navbar
         archiveCount={archive.length}
         activeVideo={activeVideo}
+        isDark={isDark}
+        onToggleTheme={() => setIsDark((prev) => !prev)}
         onExportAll={() => {
           if (archive.length > 0) {
             exportArchiveMarkdown(archive);
@@ -277,10 +293,10 @@ export default function App() {
         {mobileArchiveOpen && (
           <div className="fixed inset-0 z-50 lg:hidden flex">
             <div
-              className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm"
               onClick={() => setMobileArchiveOpen(false)}
             />
-            <div className="relative ml-auto w-full max-w-md h-full bg-[#0F1523] p-4 flex flex-col z-10 shadow-2xl">
+            <div className="relative ml-auto w-full max-w-md h-full bg-white dark:bg-[#111622] p-4 flex flex-col z-10 shadow-2xl">
               <ArchiveSidebar
                 videos={archive}
                 activeVideoId={activeVideo?.id || activeVideo?.youtubeId || null}
@@ -297,14 +313,14 @@ export default function App() {
       </main>
 
       {/* Footer adhering to Clean Design rules */}
-      <footer className="w-full border-t border-slate-800/80 py-6 text-xs text-slate-500 bg-[#070A11]">
+      <footer className="w-full border-t border-slate-200/80 dark:border-slate-800/80 py-6 text-xs text-slate-500 bg-white dark:bg-[#070A11] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-400">YouTube Intelligence</span>
-            <span className="text-slate-700" aria-hidden="true">·</span>
-            <span>AI-synthesized video analysis & archive</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Video Intelligence</span>
+            <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">·</span>
+            <span>AI video analysis & persistent archive</span>
           </div>
-          <div className="flex items-center gap-2 text-slate-400">
+          <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
             <span>Import & Export (.JSON, .MD)</span>
           </div>
         </div>

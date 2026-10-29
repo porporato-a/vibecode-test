@@ -105,16 +105,16 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
   };
 
   return (
-    <aside className="w-full bg-[#0F1523] border border-slate-800 rounded-xl flex flex-col h-full max-h-[880px] shadow-lg">
-      {/* Sidebar Header: Clean title, count, and optional mobile close button only */}
-      <div className="p-4 border-b border-slate-800 space-y-3">
+    <aside className="w-full bg-white dark:bg-[#111622] border border-slate-200/90 dark:border-slate-800 rounded-xl flex flex-col h-full max-h-[880px] shadow-xs">
+      {/* Sidebar Header */}
+      <div className="p-4 border-b border-slate-100 dark:border-slate-800 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Film className="w-4 h-4 text-rose-500" />
-            <h3 className="text-sm font-bold text-white tracking-tight">
-              Video Archive
+            <Film className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">
+              Archive
             </h3>
-            <span className="text-xs font-mono tabular-nums text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded">
+            <span className="text-xs font-mono tabular-nums text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
               {videos.length}
             </span>
           </div>
@@ -122,7 +122,7 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
           {onCloseMobile && (
             <button
               onClick={onCloseMobile}
-              className="md:hidden p-1.5 text-slate-400 hover:text-white rounded"
+              className="lg:hidden p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white"
               aria-label="Close archive drawer"
             >
               <X className="w-4 h-4" />
@@ -130,61 +130,62 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
           )}
         </div>
 
-        {/* Live Search Bar */}
+        {/* Search input */}
         <div className="relative">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search titles, creators, topics..."
-            className="w-full pl-8 pr-3 py-1.5 bg-[#090D16] border border-slate-800 rounded-md text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+            placeholder="Search summaries, titles, topics..."
+            className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#0A0E17] border border-slate-200 dark:border-slate-700/80 rounded-lg text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:bg-white dark:focus:bg-[#0A0E17] focus:border-slate-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-slate-900/10 transition-colors"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
               <X className="w-3 h-3" />
             </button>
           )}
         </div>
 
-        {/* Sorting and Filter controls */}
-        <div className="flex items-center justify-between text-xs text-slate-400 pt-0.5">
-          <span className="font-mono tabular-nums">
-            {filteredVideos.length} of {videos.length} videos
-          </span>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="bg-[#090D16] border border-slate-800 rounded px-2 py-1 text-xs text-slate-300 focus:outline-none focus:border-slate-700 cursor-pointer"
-          >
-            <option value="newest">Newest first</option>
-            <option value="oldest">Oldest first</option>
-            <option value="title">Title (A-Z)</option>
-          </select>
+        {/* Minimal Sort control */}
+        <div className="flex items-center justify-between text-xs text-slate-500">
+          <span>{filteredVideos.length} {filteredVideos.length === 1 ? 'item' : 'items'}</span>
+          <div className="flex items-center gap-1.5">
+            <span>Sort:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-slate-50 dark:bg-[#0A0E17] border border-slate-200 dark:border-slate-700/80 rounded-md px-1.5 py-0.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-slate-900 dark:focus:border-slate-400 cursor-pointer"
+            >
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="title">Title (A-Z)</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Video Cards List */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 divide-y divide-slate-800/40">
+      {/* Videos List */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
         {filteredVideos.length === 0 ? (
-          <div className="p-6 text-center text-slate-500 space-y-2">
-            <Film className="w-6 h-6 mx-auto text-slate-600" />
-            <p className="text-xs font-medium text-slate-400">
-              {searchQuery ? 'No matching archived videos' : 'Archive is empty'}
+          <div className="py-12 px-4 text-center text-slate-400 dark:text-slate-500 space-y-2">
+            <Film className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
+            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
+              {searchQuery ? 'No matching summaries found.' : 'Your archive is empty.'}
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-slate-400 dark:text-slate-500">
               {searchQuery
-                ? 'Try a different keyword or creator name'
-                : 'Analyze a YouTube video or restore default samples to populate.'}
+                ? 'Try a different search term.'
+                : 'Analyze a video or restore default samples.'}
             </p>
             {!searchQuery && (
               <div className="pt-1">
                 <button
                   onClick={handleReset}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-md transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md transition-colors cursor-pointer"
                 >
                   <RotateCcw className="w-3 h-3" />
                   <span>Restore Samples</span>
@@ -206,13 +207,13 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
                 onClick={() => onSelectVideo(video)}
                 className={`pt-2.5 first:pt-0 group relative p-2.5 rounded-lg border transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#141C2E] border-rose-500/80 shadow-md ring-1 ring-rose-500/40'
-                    : 'bg-[#090D16]/80 hover:bg-[#111726] border-slate-800/80 hover:border-slate-700'
+                    ? 'bg-slate-50 dark:bg-[#182032] border-slate-900/30 dark:border-slate-600 ring-1 ring-slate-900/10 dark:ring-slate-400/20 shadow-2xs'
+                    : 'bg-white dark:bg-[#0A0E17]/60 hover:bg-slate-50/80 dark:hover:bg-[#131A29] border-slate-200/70 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 <div className="flex gap-3">
                   {/* Thumbnail with duration / play overlay */}
-                  <div className="relative w-24 h-16 bg-slate-900 rounded overflow-hidden shrink-0 border border-slate-800">
+                  <div className="relative w-24 h-16 bg-slate-100 dark:bg-slate-900 rounded overflow-hidden shrink-0 border border-slate-200 dark:border-slate-800">
                     <img
                       src={video.thumbnailUrl}
                       alt={video.title}
@@ -221,8 +222,8 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
                         (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`;
                       }}
                     />
-                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 flex items-center justify-center transition-colors">
-                      <div className="w-5 h-5 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow">
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 flex items-center justify-center transition-colors">
+                      <div className="w-5 h-5 rounded-full bg-slate-900/90 text-white flex items-center justify-center shadow">
                         <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
                       </div>
                     </div>
@@ -232,23 +233,23 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
                       {video.contentType === 'webpage' && (
-                        <span className="px-1.5 py-0.2 text-[9px] font-semibold bg-blue-950 text-blue-400 border border-blue-800/60 rounded">
+                        <span className="px-1.5 py-0.2 text-[9px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded">
                           Web Page
                         </span>
                       )}
                     </div>
-                    <h4 className="text-xs font-semibold text-slate-200 line-clamp-2 leading-tight group-hover:text-white transition-colors">
+                    <h4 className="text-xs font-semibold text-slate-900 dark:text-slate-100 line-clamp-2 leading-tight group-hover:text-black dark:group-hover:text-white transition-colors">
                       {video.title}
                     </h4>
 
                     {/* Clean unboxed metadata with typographic separators */}
-                    <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-1">
-                      <span className="truncate max-w-[100px] text-slate-300">
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      <span className="truncate max-w-[100px] text-slate-600 dark:text-slate-300">
                         {video.channelTitle}
                       </span>
-                      <span className="text-slate-600" aria-hidden="true">·</span>
+                      <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">·</span>
                       {video.contentType === 'webpage' ? (
-                        <span className="text-blue-400 font-medium flex items-center gap-1">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium flex items-center gap-1">
                           <Globe className="w-2.5 h-2.5" />
                           <span>{video.embeddedVideos?.length || 1} vids</span>
                         </span>
@@ -261,39 +262,45 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
                     </div>
 
                     {/* Executive summary teaser */}
-                    <p className="text-[11px] text-slate-400 line-clamp-1 mt-1 leading-snug">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-1 leading-snug">
                       {video.summary.executiveSummary}
                     </p>
                   </div>
                 </div>
 
-                {/* Card Action footer */}
-                <div className="mt-2 pt-2 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-                  <span className="text-rose-400 font-medium group-hover:underline">
-                    {isSelected ? 'Currently Viewing' : 'Load Video & Summary →'}
-                  </span>
+                {/* Hover Quick Action Buttons */}
+                <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                  <div className="flex items-center gap-1">
+                    {video.summary.topics && video.summary.topics.length > 0 && (
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[150px]">
+                        {video.summary.topics[0]}
+                      </span>
+                    )}
+                  </div>
 
-                  <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-1">
                     <button
                       onClick={(e) => handleExportSingle(e, video)}
-                      className="p-1 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded transition-colors"
-                      title="Export single video summary as Markdown"
+                      className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
+                      title="Export single Markdown"
                     >
                       <Download className="w-3 h-3" />
                     </button>
+
                     <a
                       href={video.originalUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="p-1 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded transition-colors"
-                      title="Open on YouTube"
+                      className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
+                      title="Open source link"
                     >
                       <ExternalLink className="w-3 h-3" />
                     </a>
+
                     <button
                       onClick={(e) => handleDelete(e, video.id, video.title)}
-                      className="p-1 text-slate-500 hover:text-rose-400 hover:bg-rose-950/40 rounded transition-colors"
+                      className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded transition-colors"
                       title="Delete from archive"
                     >
                       <Trash2 className="w-3 h-3" />
@@ -307,10 +314,10 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
       </div>
 
       {/* Sidebar Footer Controls */}
-      <div className="p-3 border-t border-slate-800 bg-[#090D16]/50 flex items-center justify-between text-xs">
+      <div className="p-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-[#0A0E17]/40 flex items-center justify-between text-xs">
         <button
           onClick={handleReset}
-          className="flex items-center gap-1.5 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer"
           title="Restore sample videos"
         >
           <RotateCcw className="w-3 h-3" />
@@ -319,7 +326,7 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
 
         {confirmClear ? (
           <div className="flex items-center gap-2">
-            <span className="text-rose-400 text-[11px]">Clear all?</span>
+            <span className="text-rose-600 dark:text-rose-400 text-[11px]">Clear all?</span>
             <button
               onClick={handleClear}
               className="px-2 py-0.5 text-[11px] bg-rose-600 hover:bg-rose-500 text-white rounded font-medium cursor-pointer"
@@ -328,7 +335,7 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
             </button>
             <button
               onClick={() => setConfirmClear(false)}
-              className="text-slate-400 hover:text-slate-200 text-[11px] cursor-pointer"
+              className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 text-[11px] cursor-pointer"
             >
               Cancel
             </button>
@@ -337,7 +344,7 @@ export const ArchiveSidebar: React.FC<ArchiveSidebarProps> = ({
           <button
             onClick={() => setConfirmClear(true)}
             disabled={videos.length === 0}
-            className="text-slate-500 hover:text-rose-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            className="text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           >
             Clear Archive
           </button>
